@@ -4,18 +4,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Request DTO
- */
-
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 public class CreateWaitingRoomReq {
-
-    /**
-     * TODO : validation 처리 ?
-     *
-     */
 
     private String waiting_room_name;
 

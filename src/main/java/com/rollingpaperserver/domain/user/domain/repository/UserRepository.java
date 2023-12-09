@@ -10,10 +10,12 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    // TODO : Waiting-Room, Room 함께 조회 필요
+
     Optional<User> findByUserName(String userName);
 
-    @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.waitingRoom")
-    List<User> findAllWithWaitingRoom();
+    @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.room LEFT JOIN FETCH u.waitingRoom")
+    List<User> findAllWithRoomAndWaitingRoom();
 
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.room LEFT JOIN FETCH u.waitingRoom WHERE u.id = :userId")
     Optional<User> findUserWithRoomAndWaitingRoom(@Param("userId") Long userId);

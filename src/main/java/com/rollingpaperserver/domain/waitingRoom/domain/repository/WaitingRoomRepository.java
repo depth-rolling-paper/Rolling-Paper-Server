@@ -10,4 +10,6 @@ public interface WaitingRoomRepository extends JpaRepository<WaitingRoom, Long> 
 
     Optional<WaitingRoom> findByUrl(String url);
 
+    Optional<WaitingRoom> findByWaitingRoomName(String waitingRoomName);
+
 }

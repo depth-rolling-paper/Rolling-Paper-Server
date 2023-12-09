@@ -3,8 +3,9 @@ package com.rollingpaperserver.domain.waitingRoom.application;
 import com.rollingpaperserver.domain.waitingRoom.domain.WaitingRoom;
 import com.rollingpaperserver.domain.waitingRoom.domain.repository.WaitingRoomRepository;
 import com.rollingpaperserver.domain.waitingRoom.dto.response.CreateWaitingRoomRes;
+import com.rollingpaperserver.domain.waitingRoom.dto.response.FindWaitingRoomRes;
+import com.rollingpaperserver.domain.waitingRoom.dto.response.FindWaitingRoomWithCountRes;
 import com.rollingpaperserver.domain.waitingRoom.dto.resquest.CreateWaitingRoomReq;
-import com.rollingpaperserver.domain.waitingRoom.dto.resquest.FindWaitingRoomUrlReq;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class WaitingRoomService {
     private final WaitingRoomRepository waitingRoomRepository;
 
     // Description : 대기 방 생성
+    // TODO : OK
     @Transactional
     public ResponseEntity<?> createWaitingRoom(CreateWaitingRoomReq createWaitingRoomReq) {
         // URL 생성
@@ -40,11 +42,11 @@ public class WaitingRoomService {
         waitingRoomRepository.save(newWaitingRoom);
 
         CreateWaitingRoomRes createWaitingRoomRes = CreateWaitingRoomRes.builder()
-                .id(newWaitingRoom.getId())
-                .waiting_room_name(newWaitingRoom.getWaiting_room_name())
-                .limit_user_num(newWaitingRoom.getLimit_user_num())
-                .start_time(newWaitingRoom.getStart_time())
-                .current_user_num(newWaitingRoom.getCurrent_user_num())
+//                .id(newWaitingRoom.getId())
+//                .waiting_room_name(newWaitingRoom.getWaiting_room_name())
+//                .limit_user_num(newWaitingRoom.getLimit_user_num())
+//                .start_time(newWaitingRoom.getStart_time())
+//                .current_user_num(newWaitingRoom.getCurrent_user_num())
                 .url(newWaitingRoom.getUrl())
                 .build();
 
@@ -58,11 +60,17 @@ public class WaitingRoomService {
 
         // 해당 url의 대기 방이 없는 경우
         if (!findByUrlWaitingRoom.isPresent()) {
-//            throw new IllegalStateException("없는 대기 방입니다.");
-            return ResponseEntity.badRequest().body("없는 대기 방입니다.");
+            FindWaitingRoomRes findWaitingRoomRes = FindWaitingRoomRes.builder()
+                    .message("없는 대기 방입니다.")
+                    .build();
+            return ResponseEntity.badRequest().body(findWaitingRoomRes);
         }
 
-        return ResponseEntity.ok("대기 방이 존재합니다.");
+        FindWaitingRoomRes findWaitingRoomRes = FindWaitingRoomRes.builder()
+                .message("대기 방이 존재합니다.")
+                .build();
+
+        return ResponseEntity.ok(findWaitingRoomRes);
 
     }
 
@@ -72,17 +80,30 @@ public class WaitingRoomService {
 
         // 해당 대기 방이 없는 경우
         if (!findByIdWaitingRoom.isPresent()) {
-            return ResponseEntity.badRequest().body("존재하지 않는 대기 방입니다.");
+            FindWaitingRoomRes findWaitingRoomRes = FindWaitingRoomRes.builder()
+                    .message("존재하지 않는 대기 방입니다.")
+                    .build();
+
+            return ResponseEntity.badRequest().body(findWaitingRoomRes);
         }
 
         WaitingRoom waitingRoom = findByIdWaitingRoom.get();
 
         // 현재 인원 == 최대 인원인 경우
         if (waitingRoom.getCurrent_user_num() == waitingRoom.getLimit_user_num()) {
-            return ResponseEntity.badRequest().body("대기 방이 가득 찼습니다.");
+            FindWaitingRoomRes findWaitingRoomRes = FindWaitingRoomRes.builder()
+                    .message("대기 방이 가득 찼습니다.")
+                    .build();
+
+            return ResponseEntity.badRequest().body(findWaitingRoomRes);
         }
 
-        return ResponseEntity.ok(waitingRoom.getCurrent_user_num());
+        FindWaitingRoomWithCountRes findWaitingRoomWithCountRes = FindWaitingRoomWithCountRes.builder()
+                .currentUserCount(waitingRoom.getCurrent_user_num())
+                .message("대기 방에 입장 가능합니다.")
+                .build();
+
+        return ResponseEntity.ok(findWaitingRoomWithCountRes);
 
     }
 }

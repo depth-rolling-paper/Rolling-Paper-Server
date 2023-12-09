@@ -14,13 +14,15 @@ public class RollingPaperController {
     private final RollingPaperService rollingPaperService;
 
     // Description : 유저의 롤링페이퍼 목록 조회
+    // TODO : OK
     @GetMapping("/{user-id}")
     public ResponseEntity<?> findRollingPaperList(@PathVariable(value = "user-id") Long userId) {
         return rollingPaperService.findRollingPaperList(userId);
 
     }
 
-    // Description : 롤링페이퍼 작성
+    // Description : 해당 유저에게 롤링페이퍼 작성
+    // TODO : OK / sender 생각
     @PostMapping("/{user-id}")
     public ResponseEntity<?> writeRollingPaper(@PathVariable(value = "user-id") Long userId, @RequestBody RollingPaperReq rollingPaperReq) {
         return rollingPaperService.writeRollingPaper(userId, rollingPaperReq);

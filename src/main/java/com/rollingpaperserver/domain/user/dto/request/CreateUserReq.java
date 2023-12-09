@@ -16,16 +16,13 @@ public class CreateUserReq {
 
     private UserType userType;
 
-//    private Room room;
-//    private Long roomId;
-
-//    private WaitingRoom waitingRoom;
-//    private Long waitingRoomId;
+    private String waitingRoomUrl;
 
     @Builder
-    public CreateUserReq(String userName, UserType userType) {
+    public CreateUserReq(String userName, UserType userType, String waitingRoomUrl) {
         this.userName = userName;
         this.userType = userType;
+        this.waitingRoomUrl = waitingRoomUrl;
     }
 
 }

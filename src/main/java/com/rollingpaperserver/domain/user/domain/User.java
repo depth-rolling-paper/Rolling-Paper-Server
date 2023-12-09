@@ -1,5 +1,6 @@
 package com.rollingpaperserver.domain.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.rollingpaperserver.domain.room.domain.Room;
 import com.rollingpaperserver.domain.waitingRoom.domain.WaitingRoom;
 import jakarta.persistence.*;
@@ -24,14 +25,20 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
+    @JsonBackReference
     private Room room;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
+    @JsonBackReference
     private WaitingRoom waitingRoom;
 
     public void updateWaitingRoom(WaitingRoom waitingRoom) {
         this.waitingRoom = waitingRoom;
+    }
+
+    public void updateRoom(Room room) {
+        this.room = room;
     }
 
     @Builder

@@ -19,12 +19,11 @@ public class RoomController {
     // TODO : 필요 시 해당 방 유저 목록 조회 및 롤링페이퍼 관련 정보 API 추가
 
     // Description : 방 생성
+    // TODO : OK
     @PostMapping
     public ResponseEntity<?> createRoom(@RequestBody CreateRoomReq createRoomReq) {
         return roomService.createRoom(createRoomReq);
 
     }
-
-
 
 }

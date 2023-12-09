@@ -41,11 +41,6 @@ public class RollingPaperReq {
     @Nullable
     private String fontFamily;
 
-    // Description : USER
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn
-//    private User user;
-
     // Description : IMAGE, ROLLING_PAPER
     private RollingPaperType rollingPaperType;
 

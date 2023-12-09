@@ -4,6 +4,7 @@ import com.rollingpaperserver.domain.rollingPaper.domain.RollingPaper;
 import com.rollingpaperserver.domain.rollingPaper.domain.RollingPaperType;
 import com.rollingpaperserver.domain.rollingPaper.domain.repository.RollingPaperRepository;
 import com.rollingpaperserver.domain.rollingPaper.dto.request.RollingPaperReq;
+import com.rollingpaperserver.domain.rollingPaper.dto.response.RollingPaperListRes;
 import com.rollingpaperserver.domain.rollingPaper.dto.response.RollingPaperRes;
 import com.rollingpaperserver.domain.user.domain.User;
 import com.rollingpaperserver.domain.user.domain.repository.UserRepository;
@@ -27,16 +28,15 @@ public class RollingPaperService {
     // Description : 유저의 롤링페이퍼 목록 조회
     public ResponseEntity<?> findRollingPaperList(Long userId) {
 
-        List<RollingPaper> rollingPaperList = rollingPaperRepository.findAllRollingPaperWithUser();
-        List<RollingPaper> rollingPapers = new ArrayList<>();
+        List<RollingPaper> rollingPaperList = rollingPaperRepository.findAllRollingPaperWithUser(userId);
 
-        for (int i = 0; i < rollingPaperList.size(); i++) {
-            if (rollingPaperList.get(i).getUser().getId() == userId) {
-                rollingPapers.add(rollingPaperList.get(i));
-            }
-        }
+        RollingPaperListRes rollingPaperListRes = RollingPaperListRes.builder()
+                .rollingPapers(rollingPaperList)
+                .message("해당 유저의 롤링페이퍼 목록입니다.")
+                .build();
 
-        return ResponseEntity.ok(rollingPapers);
+        return ResponseEntity.ok(rollingPaperListRes);
+
     }
 
     // Description : 롤링페이퍼 작성
@@ -44,21 +44,12 @@ public class RollingPaperService {
     @Transactional
     public ResponseEntity<?> writeRollingPaper(Long userId, RollingPaperReq rollingPaperReq) {
 
-        // 작성 당할 유저 조회
-//         Optional<User> findUserById = userRepository.findById(userId);
-
-//        if (!findUserById.isPresent())
-//            return ResponseEntity.badRequest().body("사용자가 존재하지 않습니다.");
-
-//        User user = findUserById.get();
-
         Optional<User> userWithRoomAndWaitingRoom = userRepository.findUserWithRoomAndWaitingRoom(userId);
 
         if (!userWithRoomAndWaitingRoom.isPresent())
             return ResponseEntity.badRequest().body("사용자가 존재하지 않습니다.");
 
         User user = userWithRoomAndWaitingRoom.get();
-
 
         RollingPaper rollingPaper =  null;
 
@@ -92,29 +83,12 @@ public class RollingPaperService {
         rollingPaperRepository.save(rollingPaper);
 
         RollingPaperRes rollingPaperRes = RollingPaperRes.builder()
-                .id(rollingPaper.getId())
-                .rollingPaperType(rollingPaper.getRollingPaperType())
-                // Description : Type == ROLLING_PAPER
-                .location_x(rollingPaper.getLocation_x())
-                .location_y(rollingPaper.getLocation_y())
-                .rotation(rollingPaper.getRotation())
-                .width(rollingPaper.getWidth())
-                .height(rollingPaper.getHeight())
-                .scaleX(rollingPaper.getScaleX())
-                .scaleY(rollingPaper.getScaleY())
-                .text(rollingPaper.getText())
-                .fontFamily(rollingPaper.getFontFamily())
-                .user(user)
-                // Description : Type == IMAGE
-                .imageName(rollingPaperReq.getImageName())
-                .sizeX(rollingPaperReq.getSizeX())
-                .sizeY(rollingPaperReq.getSizeY())
+                .rollingPaperId(rollingPaper.getId())
+                .message("롤링페이퍼가 작성되었습니다.")
                 .build();
 
         return ResponseEntity.ok(rollingPaperRes);
 
-
     }
-
 
 }

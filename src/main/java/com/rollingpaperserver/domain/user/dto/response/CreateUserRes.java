@@ -13,17 +13,12 @@ import lombok.NoArgsConstructor;
 public class CreateUserRes {
 
     private Long id;
-    private String userName;
-    private UserType userType;
-    private Room room;
-    private WaitingRoom waitingRoom;
+
+    private String message;
 
     @Builder
-    public CreateUserRes(Long id, String userName, UserType userType, Room room, WaitingRoom waitingRoom) {
+    public CreateUserRes(Long id, String message) {
         this.id = id;
-        this.userName = userName;
-        this.userType = userType;
-        this.room = room;
-        this.waitingRoom = waitingRoom;
+        this.message = message;
     }
 }

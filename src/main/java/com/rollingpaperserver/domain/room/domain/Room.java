@@ -1,13 +1,15 @@
 package com.rollingpaperserver.domain.room.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.rollingpaperserver.domain.user.domain.User;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -20,6 +22,10 @@ public class Room {
     private Long id;
 
     private String roomName;
+
+    @OneToMany(mappedBy = "room")
+    @JsonManagedReference
+    private List<User> users = new ArrayList<>();
 
     @Builder
     public Room(Long id, String roomName) {

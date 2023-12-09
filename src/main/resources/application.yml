@@ -1,0 +1,42 @@
+spring:
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:tcp://localhost/~/socket-practice;NON_KEYWORDS=USER
+    username: sa
+    password:
+
+  #JPA 설정
+  jpa:
+    database-platform:
+    hibernate:
+      ddl-auto: validate
+
+    # 배포할 때는 open-in-view : false
+    open-in-view: false
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+# Swagger
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  api-docs:
+    groups:
+      enabled: true
+  swagger-ui:
+    operations-sorter: alpha # alpha(알파벳 오름차순), method(HTTP메소드순)
+    tags-sorter: alpha # 태그 정렬 기준
+    path: /swagger # html 문서 접속 경로
+    disable-swagger-default-url: true
+    display-query-params-without-oauth2: true
+    doc-expansion: none # tag, operation 펼치는 방식
+  paths-to-match:
+    - /**
+#    - /swagger
+#    - /swagger-ui.html
+#    - /swagger-ui/**
+#    - /api-docs
+#    - /api-docs/**
+#    - /v3/api-docs/**

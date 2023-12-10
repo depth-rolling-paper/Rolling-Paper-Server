@@ -3,6 +3,8 @@ package com.rollingpaperserver.domain.rollingPaper.application;
 import com.rollingpaperserver.domain.rollingPaper.domain.RollingPaper;
 import com.rollingpaperserver.domain.rollingPaper.domain.RollingPaperType;
 import com.rollingpaperserver.domain.rollingPaper.domain.repository.RollingPaperRepository;
+import com.rollingpaperserver.domain.rollingPaper.dto.ImageRollingPaperDTO;
+import com.rollingpaperserver.domain.rollingPaper.dto.RollingPaperDTO;
 import com.rollingpaperserver.domain.rollingPaper.dto.request.RollingPaperReq;
 import com.rollingpaperserver.domain.rollingPaper.dto.response.RollingPaperListRes;
 import com.rollingpaperserver.domain.rollingPaper.dto.response.RollingPaperRes;
@@ -29,9 +31,45 @@ public class RollingPaperService {
     public ResponseEntity<?> findRollingPaperList(Long userId) {
 
         List<RollingPaper> rollingPaperList = rollingPaperRepository.findAllRollingPaperWithUser(userId);
+        List<ImageRollingPaperDTO> imageDtos = new ArrayList<>();
+        List<RollingPaperDTO> dtos = new ArrayList<>();
+
+        for (RollingPaper rollingPaper : rollingPaperList) {
+            if (rollingPaper.getRollingPaperType().equals(RollingPaperType.IMAGE)) {
+                ImageRollingPaperDTO imageRollingPaperDTO = ImageRollingPaperDTO.builder()
+                        .id(rollingPaper.getId())
+                        .rollingPaperType(rollingPaper.getRollingPaperType())
+                        .imageName(rollingPaper.getImageName())
+                        .sizeX(rollingPaper.getSizeX())
+                        .sizeY(rollingPaper.getSizeY())
+                        .build();
+
+                imageDtos.add(imageRollingPaperDTO);
+
+            } else {
+                // If : TYPE = "ROLLING_PAPER"
+                RollingPaperDTO rollingPaperDTO = RollingPaperDTO.builder()
+                        .id(rollingPaper.getId())
+                        .location_x(rollingPaper.getLocation_x())
+                        .location_y(rollingPaper.getLocation_y())
+                        .rotation(rollingPaper.getRotation())
+                        .width(rollingPaper.getWidth())
+                        .height(rollingPaper.getHeight())
+                        .scaleX(rollingPaper.getScaleX())
+                        .scaleY(rollingPaper.getScaleY())
+                        .text(rollingPaper.getText())
+                        .fontFamily(rollingPaper.getFontFamily())
+                        .rollingPaperType(rollingPaper.getRollingPaperType())
+                        .build();
+
+                dtos.add(rollingPaperDTO);
+            }
+        }
 
         RollingPaperListRes rollingPaperListRes = RollingPaperListRes.builder()
-                .rollingPapers(rollingPaperList)
+                .rollingPapers(dtos)
+                .imageRollingPapers(imageDtos)
+//                .rollingPapers(rollingPaperList)
                 .message("해당 유저의 롤링페이퍼 목록입니다.")
                 .build();
 

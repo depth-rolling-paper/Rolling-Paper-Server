@@ -9,12 +9,15 @@ import lombok.NoArgsConstructor;
 @Data
 public class FindWaitingRoomWithCountRes {
 
+    private boolean canJoin;
+
     private Integer currentUserCount;
 
     private String message;
 
     @Builder
-    public FindWaitingRoomWithCountRes(Integer currentUserCount, String message) {
+    public FindWaitingRoomWithCountRes(boolean canJoin, Integer currentUserCount, String message) {
+        this.canJoin = canJoin;
         this.currentUserCount = currentUserCount;
         this.message = message;
     }

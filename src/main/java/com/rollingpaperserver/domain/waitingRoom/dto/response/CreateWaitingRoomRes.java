@@ -11,25 +11,13 @@ import java.time.LocalDateTime;
 @Data
 public class CreateWaitingRoomRes {
 
-//    private Long id;
-
-//    private String waiting_room_name;
-
-//    private int limit_user_num;
-
-//    private int current_user_num;
-
-//    private LocalDateTime start_time;
-
     private String url;
 
+    private String message;
+
     @Builder
-    public CreateWaitingRoomRes(String url) {
-//        this.id = id;
-//        this.waiting_room_name = waiting_room_name;
-//        this.limit_user_num = limit_user_num;
-//        this.current_user_num = current_user_num;
-//        this.start_time = start_time;
+    public CreateWaitingRoomRes(String url, String message) {
         this.url = url;
+        this.message = message;
     }
 }

@@ -56,6 +56,7 @@ public class RoomService {
         CreateRoomRes createRoomRes = CreateRoomRes.builder()
                 .id(room.getId())
                 .roomName(room.getRoomName())
+                .message("방이 생성되었습니다. 동시에 대기 방의 유저들이 방으로 입장하였습니다.")
                 .build();
 
         return ResponseEntity.ok(createRoomRes);

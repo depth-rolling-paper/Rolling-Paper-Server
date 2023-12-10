@@ -36,7 +36,7 @@ public class WaitingRoom {
     private List<User> users = new ArrayList<>();
 
     // Description : Update Method
-    public void updateCurrentUserNum(int current_user_num) {
+    public synchronized void updateCurrentUserNum(int current_user_num) {
         this.current_user_num = current_user_num;
     }
 

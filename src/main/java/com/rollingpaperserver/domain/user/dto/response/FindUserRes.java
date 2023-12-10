@@ -9,10 +9,13 @@ import lombok.NoArgsConstructor;
 @Data
 public class FindUserRes {
 
+    private boolean canUse;
+
     private String message;
 
     @Builder
-    public FindUserRes(String message) {
+    public FindUserRes(boolean canUse, String message) {
+        this.canUse = canUse;
         this.message = message;
     }
 }

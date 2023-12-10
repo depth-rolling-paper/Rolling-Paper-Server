@@ -13,10 +13,13 @@ public class CreateRoomRes {
 
     private String roomName;
 
+    private String message;
+
     @Builder
-    public CreateRoomRes(Long id, String roomName) {
+    public CreateRoomRes(Long id, String roomName, String message) {
         this.id = id;
         this.roomName = roomName;
+        this.message = message;
     }
 
 }

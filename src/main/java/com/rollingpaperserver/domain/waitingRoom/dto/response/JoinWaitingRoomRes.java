@@ -1,6 +1,5 @@
 package com.rollingpaperserver.domain.waitingRoom.dto.response;
 
-import com.rollingpaperserver.domain.waitingRoom.domain.WaitingRoom;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -8,15 +7,15 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
-public class FindWaitingRoomRes {
+public class JoinWaitingRoomRes {
 
-    private boolean canMake;
+    private boolean canJoin;
 
     private String message;
 
     @Builder
-    public FindWaitingRoomRes(boolean canMake, String message) {
-        this.canMake = canMake;
+    public JoinWaitingRoomRes(boolean canJoin, String message) {
+        this.canJoin = canJoin;
         this.message = message;
     }
 }

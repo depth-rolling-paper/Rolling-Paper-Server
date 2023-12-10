@@ -33,6 +33,9 @@ public class User {
     @JsonBackReference
     private WaitingRoom waitingRoom;
 
+    // Description : 대기 방 입장 순서
+    private Integer sequence;
+
     public void updateWaitingRoom(WaitingRoom waitingRoom) {
         this.waitingRoom = waitingRoom;
     }
@@ -42,11 +45,13 @@ public class User {
     }
 
     @Builder
-    public User(Long id, String userName, UserType userType, Room room, WaitingRoom waitingRoom) {
+    public User(Long id, String userName, UserType userType, Room room, WaitingRoom waitingRoom, Integer sequence) {
         this.id = id;
         this.userName = userName;
         this.userType = userType;
         this.room = room;
         this.waitingRoom = waitingRoom;
+        this.sequence = sequence;
     }
+
 }

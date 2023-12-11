@@ -51,7 +51,17 @@ public class RoomService {
         List<User> users = waitingRoom.getUsers();
         for (User user : users) {
             user.updateRoom(room);
+
+            // Description : 유저 할당된 대기 방 삭제
+            user.updateWaitingRoom(null);
+
         }
+
+        // Description : 방 삭제
+        waitingRoomRepository.delete(waitingRoom);
+
+        // Description : 방 삭제
+
 
         CreateRoomRes createRoomRes = CreateRoomRes.builder()
                 .id(room.getId())

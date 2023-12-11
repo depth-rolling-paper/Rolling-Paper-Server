@@ -131,7 +131,7 @@ public class UserService {
         userRepository.save(user);
         waitingRoom.updateCurrentUserNum(waitingRoom.getCurrent_user_num() + 1);
 
-        // 소켓 연결된 녀석들에게 실시간 유저 수 전송
+        // Description : Socket Message Send 소켓 연결된 녀석들에게 실시간 유저 수 전송
         webSocketEventListener.sendUserCountUpdate(waitingRoom.getUrl(), waitingRoom.getCurrent_user_num());
 
         CreateUserRes createUserRes = CreateUserRes.builder()
@@ -143,7 +143,7 @@ public class UserService {
 
     }
 
-    // Description : 본인 제외 유저 목록 조회 / 일단 대기 방으로 했음 --> 방으로 바꾸어야 함 --> 바꿈
+    // Description : 해당 '방' 내의 본인 제외 유저 목록 조회
     // TODO : OK
     public ResponseEntity<?> findUsersExclusionMe(Long userId, Long roomId) {
 

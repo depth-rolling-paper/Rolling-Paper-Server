@@ -1,6 +1,7 @@
 package com.rollingpaperserver.domain.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.rollingpaperserver.domain.rollingPaper.domain.RollingPaper;
 import com.rollingpaperserver.domain.room.domain.Room;
 import com.rollingpaperserver.domain.waitingRoom.domain.WaitingRoom;
 import jakarta.persistence.*;
@@ -8,6 +9,9 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -32,6 +36,9 @@ public class User {
     @JoinColumn
     @JsonBackReference
     private WaitingRoom waitingRoom;
+
+    @OneToMany(mappedBy = "user")
+    private List<RollingPaper> rollingPapers = new ArrayList<>();
 
     // Description : 대기 방 입장 순서
     private Integer sequence;

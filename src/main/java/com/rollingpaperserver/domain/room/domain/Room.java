@@ -23,13 +23,17 @@ public class Room {
 
     private String roomName;
 
+    private String url;
+
     @OneToMany(mappedBy = "room")
     @JsonManagedReference
     private List<User> users = new ArrayList<>();
 
     @Builder
-    public Room(Long id, String roomName) {
+    public Room(Long id, String roomName, String url) {
         this.id = id;
         this.roomName = roomName;
+        this.url = url;
     }
+
 }

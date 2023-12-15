@@ -44,6 +44,7 @@ public class WaitingRoomService {
         waitingRoomRepository.save(newWaitingRoom);
 
         CreateWaitingRoomRes createWaitingRoomRes = CreateWaitingRoomRes.builder()
+                .id(newWaitingRoom.getId())
                 .url(newWaitingRoom.getUrl())
                 .message("대기 방 URL을 반환합니다.")
                 .build();
@@ -62,7 +63,8 @@ public class WaitingRoomService {
                     .canMake(true)
                     .message("없는 대기 방입니다.")
                     .build();
-            return ResponseEntity.ok(findWaitingRoomRes);
+
+            return ResponseEntity.badRequest().body(findWaitingRoomRes);
         }
 
         FindWaitingRoomRes findWaitingRoomRes = FindWaitingRoomRes.builder()
@@ -70,13 +72,13 @@ public class WaitingRoomService {
                 .message("대기 방이 존재합니다.")
                 .build();
 
-        return ResponseEntity.badRequest().body(findWaitingRoomRes);
-
+        return ResponseEntity.ok(findWaitingRoomRes);
     }
 
     // Description : 현재 대기 인원 조회 - 참여할 수 있는지 확인해봐야 하므로
-    public ResponseEntity<?> checkCanJoinWaitingRoom(Long waitingRoomId) {
-        Optional<WaitingRoom> findByIdWaitingRoom = waitingRoomRepository.findById(waitingRoomId);
+    public ResponseEntity<?> checkCanJoinWaitingRoom(String url) {
+//        Optional<WaitingRoom> findByIdWaitingRoom = waitingRoomRepository.findById(waitingRoomId);
+        Optional<WaitingRoom> findByIdWaitingRoom = waitingRoomRepository.findByUrl(url);
 
         // 해당 대기 방이 없는 경우
         if (!findByIdWaitingRoom.isPresent()) {

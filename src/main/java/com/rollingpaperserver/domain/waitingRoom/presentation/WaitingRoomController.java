@@ -57,8 +57,8 @@ public class WaitingRoomController {
             @ApiResponse(responseCode = "200", description = "대기 방 참여 가능", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = FindWaitingRoomWithCountRes.class))}),
             @ApiResponse(responseCode = "400", description = "대기 방 참여 불가", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = JoinWaitingRoomRes.class))}),
     })
-    @GetMapping("/{waiting-room-id}")
-    public ResponseEntity<?> checkCanJoinWaitingRoom(@PathVariable(value = "waiting-room-id") Long waitingRoomId) {
-        return waitingRoomService.checkCanJoinWaitingRoom(waitingRoomId);
+    @GetMapping("/{waiting-room-url}")
+    public ResponseEntity<?> checkCanJoinWaitingRoom(@PathVariable(value = "waiting-room-url") String url) {
+        return waitingRoomService.checkCanJoinWaitingRoom(url);
     }
 }

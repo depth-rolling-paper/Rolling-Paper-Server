@@ -2,6 +2,7 @@ package com.rollingpaperserver.domain.user.application;
 
 import com.rollingpaperserver.domain.room.domain.Room;
 import com.rollingpaperserver.domain.room.domain.repository.RoomRepository;
+import com.rollingpaperserver.domain.room.dto.response.FindRoomRes;
 import com.rollingpaperserver.domain.user.domain.User;
 import com.rollingpaperserver.domain.user.domain.repository.UserRepository;
 import com.rollingpaperserver.domain.user.dto.UserDTO;
@@ -9,6 +10,7 @@ import com.rollingpaperserver.domain.user.dto.request.CreateUserReq;
 import com.rollingpaperserver.domain.user.dto.response.CreateUserRes;
 import com.rollingpaperserver.domain.user.dto.response.ExclusionMeRes;
 import com.rollingpaperserver.domain.user.dto.response.FindUserRes;
+import com.rollingpaperserver.domain.user.dto.response.OutRoomRes;
 import com.rollingpaperserver.domain.waitingRoom.domain.WaitingRoom;
 import com.rollingpaperserver.domain.waitingRoom.domain.repository.WaitingRoomRepository;
 import com.rollingpaperserver.domain.waitingRoom.dto.response.FindWaitingRoomRes;
@@ -131,7 +133,7 @@ public class UserService {
         userRepository.save(user);
         waitingRoom.updateCurrentUserNum(waitingRoom.getCurrent_user_num() + 1);
 
-        // 소켓 연결된 녀석들에게 실시간 유저 수 전송
+        // Description : Socket Message Send 소켓 연결된 녀석들에게 실시간 유저 수 전송
         webSocketEventListener.sendUserCountUpdate(waitingRoom.getUrl(), waitingRoom.getCurrent_user_num());
 
         CreateUserRes createUserRes = CreateUserRes.builder()
@@ -143,7 +145,7 @@ public class UserService {
 
     }
 
-    // Description : 본인 제외 유저 목록 조회 / 일단 대기 방으로 했음 --> 방으로 바꾸어야 함 --> 바꿈
+    // Description : 해당 '방' 내의 본인 제외 유저 목록 조회
     // TODO : OK
     public ResponseEntity<?> findUsersExclusionMe(Long userId, Long roomId) {
 
@@ -190,5 +192,75 @@ public class UserService {
 
     }
 
+    // Description : 방 나가기 / 마지막 유저가 방 나갈 시 방도 함께 삭제
+    @Transactional
+    public ResponseEntity<?> outRoom(Long userId, Long roomId) {
+
+        // 방 존재 확인
+        Optional<Room> byRoomId = roomRepository.findById(roomId);
+
+        if (byRoomId.isEmpty()) {
+            FindRoomRes roomRes = FindRoomRes.builder()
+                    .message("해당 ID의 방이 존재하지 않습니다.")
+                    .build();
+
+            return ResponseEntity.badRequest().body(roomRes);
+        }
+
+        Room room = byRoomId.get();
+
+        // 유저 존재 확인
+        Optional<User> byUserId = userRepository.findById(userId);
+
+        if (byUserId.isEmpty()) {
+            FindRoomRes roomRes = FindRoomRes.builder()
+                    .message("해당 ID의 유저가 존재하지 않습니다.")
+                    .build();
+
+            return ResponseEntity.badRequest().body(roomRes);
+        }
+
+        /**
+         * TODO : 마지막 유저인지 확인 로직 필요
+         *  - 소켓과 연관지어 생각도 필요
+         *  - 방 나가기 - 소켓 참여 - 마지막 사람 나가면 true 반환 - 마이페이지 이동 가능
+         */
+
+        // 방에서 해당 유저 이탈
+        User user = byUserId.get();
+
+        user.updateRoom(null);
+        room.getUsers().remove(user);
+
+        // Description : Socket Message Send 소켓 연결된 녀석들에게 실시간 유저 수 전송
+        webSocketEventListener.sendUserCountUpdate(room.getUrl(), room.getUsers().size());
+
+        if (room.getUsers().isEmpty()) {
+            // If : 유저가 모두 이탈했으면
+            OutRoomRes outRoomRes = OutRoomRes.builder()
+                    .emptyRoom(true)
+                    .userCountInRoom(0)
+                    .message("해당 방의 유저가 모두 이탈하였습니다. 방을 삭제합니다.")
+                    .build();
+
+            roomRepository.delete(room);
+
+            return ResponseEntity.ok(outRoomRes);
+        } else {
+            OutRoomRes outRoomRes = OutRoomRes.builder()
+                    .emptyRoom(false)
+                    .userCountInRoom(room.getUsers().size())
+                    .message("아직 롤링페이퍼를 작성 중인 유저가 존재합니다.")
+                    .build();
+
+            return ResponseEntity.ok(outRoomRes);
+        }
+
+        /**
+         * TODO : 방 삭제 했음
+         *  - 유저 삭제 및 롤링페이퍼 삭제 로직은 따로 만들어야 할 듯
+         */
+
+    }
 
 }

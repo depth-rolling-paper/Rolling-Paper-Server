@@ -16,8 +16,6 @@ import java.util.List;
 @Entity
 public class Room {
     
-    // TODO : Room에 mappedBy 설정 고려, 총 인원 수 설정 고려하기
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 

@@ -71,10 +71,10 @@ public class UserController {
         return userService.outRoom(userId, roomId);
     }
 
-//    // Description : 유저 삭제 - 이미지 저장까지 한 진짜 마지막
-//    @DeleteMapping("/{user-id}")
-//    public ResponseEntity<?> deleteUser(@PathVariable(value = "user-id") Long userId) {
-//        return userService.deleteUser(userId);
-//    }
+    // Description : 유저 삭제 - 이미지 저장까지 한 진짜 마지막
+    @DeleteMapping("/{user-id}")
+    public ResponseEntity<?> deleteUser(@PathVariable(value = "user-id") Long userId) {
+        return userService.deleteUser(userId);
+    }
 
 }

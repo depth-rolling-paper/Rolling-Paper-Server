@@ -1,5 +1,7 @@
 package com.rollingpaperserver.domain.user.application;
 
+import com.rollingpaperserver.domain.rollingPaper.domain.RollingPaper;
+import com.rollingpaperserver.domain.rollingPaper.domain.repository.RollingPaperRepository;
 import com.rollingpaperserver.domain.room.domain.Room;
 import com.rollingpaperserver.domain.room.domain.repository.RoomRepository;
 import com.rollingpaperserver.domain.room.dto.response.FindRoomRes;
@@ -33,11 +35,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final WaitingRoomRepository waitingRoomRepository;
     private final RoomRepository roomRepository;
+    private final RollingPaperRepository rollingPaperRepository;
 
     private final WebSocketEventListener webSocketEventListener;
 
     // Description : 유저 닉네임 유효성 검사
-    // TODO : OK - 대기 방 내에서 유효성 검사할 필요가 있음 : 해결
+    // TODO : OK
     public ResponseEntity<?> checkUser(String userName, String url) {
 
         Optional<WaitingRoom> waitingRoomByUrl = waitingRoomRepository.findByUrl(url);
@@ -170,7 +173,6 @@ public class UserService {
 
         User user = findUserWithRoomAndWaitingRoom.get();
 
-//        WaitingRoom waitingRoom = user.getWaitingRoom();
         Room room = user.getRoom();
 
         List<User> users = room.getUsers();
@@ -220,12 +222,6 @@ public class UserService {
             return ResponseEntity.badRequest().body(roomRes);
         }
 
-        /**
-         * TODO : 마지막 유저인지 확인 로직 필요
-         *  - 소켓과 연관지어 생각도 필요
-         *  - 방 나가기 - 소켓 참여 - 마지막 사람 나가면 true 반환 - 마이페이지 이동 가능
-         */
-
         // 방에서 해당 유저 이탈
         User user = byUserId.get();
 
@@ -256,11 +252,35 @@ public class UserService {
             return ResponseEntity.ok(outRoomRes);
         }
 
-        /**
-         * TODO : 방 삭제 했음
-         *  - 유저 삭제 및 롤링페이퍼 삭제 로직은 따로 만들어야 할 듯
-         */
-
     }
 
+    // Description : 유저 삭제 및 롤링페이퍼 삭제 - 이미지 저장까지 한 진짜 마지막
+    @Transactional
+    public ResponseEntity<?> deleteUser(Long userId) {
+
+        // 유저 존재 확인
+        Optional<User> byUserId = userRepository.findById(userId);
+
+        if (byUserId.isEmpty()) {
+            FindRoomRes roomRes = FindRoomRes.builder()
+                    .message("해당 ID의 유저가 존재하지 않습니다.")
+                    .build();
+
+            return ResponseEntity.badRequest().body(roomRes);
+        }
+
+        User user = byUserId.get();
+
+        List<RollingPaper> rollingPaperList = rollingPaperRepository.findByUser(user);
+        rollingPaperRepository.deleteAll(rollingPaperList);
+
+        userRepository.delete(user);
+
+        CreateUserRes createUserRes = CreateUserRes.builder()
+                .id(userId)
+                .message("유저 및 해당 유저의 롤링페이퍼가 삭제되었습니다.")
+                .build();
+
+        return ResponseEntity.ok(createUserRes);
+    }
 }

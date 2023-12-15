@@ -69,7 +69,6 @@ public class RollingPaperService {
         RollingPaperListRes rollingPaperListRes = RollingPaperListRes.builder()
                 .rollingPapers(dtos)
                 .imageRollingPapers(imageDtos)
-//                .rollingPapers(rollingPaperList)
                 .message("해당 유저의 롤링페이퍼 목록입니다.")
                 .build();
 

@@ -26,8 +26,6 @@ public class RoomController {
 
     private final RoomService roomService;
 
-    // TODO : 필요 시 해당 방 유저 목록 조회 및 롤링페이퍼 관련 정보 API 추가
-
     // Description : 방 생성
     // TODO : OK :: url도 주기
     @Operation(summary = "롤링페이퍼 작성 방 생성", description = "롤링페이퍼 작성 방을 생성합니다. 대기 방의 유저가 방으로 이동됩니다.")

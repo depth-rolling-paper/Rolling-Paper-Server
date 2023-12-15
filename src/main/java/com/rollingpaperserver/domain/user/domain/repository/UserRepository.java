@@ -12,8 +12,6 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    // TODO : Waiting-Room, Room 함께 조회 필요
-
     Optional<User> findByUserName(String userName);
 
     // DTO와 함께 사용

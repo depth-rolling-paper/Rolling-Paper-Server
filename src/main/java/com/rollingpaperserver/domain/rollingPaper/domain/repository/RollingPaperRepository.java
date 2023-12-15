@@ -19,4 +19,5 @@ public interface RollingPaperRepository extends JpaRepository<RollingPaper, Long
     List<RollingPaper> findAllRollingPaperWithUser(@Param("userId") Long userId);
 
 
+    List<RollingPaper> findByUser(User user);
 }

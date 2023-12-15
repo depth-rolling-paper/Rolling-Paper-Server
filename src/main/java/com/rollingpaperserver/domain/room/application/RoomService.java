@@ -51,6 +51,7 @@ public class RoomService {
 
         Room room = Room.builder()
                 .roomName(createRoomReq.getRoomName())
+                .url(waitingRoom.getUrl())
                 .build();
 
         roomRepository.save(room);
@@ -77,7 +78,7 @@ public class RoomService {
         return ResponseEntity.ok(createRoomRes);
     }
 
-    // Description : 방 삭제
+    // Description : 방 삭제 - 필요 없어졌을지도 ..
     @Transactional
     public ResponseEntity<?> deleteRoom(DeleteRoomReq deleteRoomReq) {
         // TODO : 방 삭제 로직 구현 ( 서비스 종료하기 버튼 - 마지막 단계 ) ++ 유저도 삭제할 필요가 있겠네 --> 유저 삭제면 롤링페이퍼 삭제도 할 필요가 있음

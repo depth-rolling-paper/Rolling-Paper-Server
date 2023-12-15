@@ -65,7 +65,10 @@ public class UserController {
         return userService.findUsersExclusionMe(userId, roomId);
     }
 
-    // Description : 유저 :: 대기방 -> 방 입장 (선행 : 대기방에 매핑될 방이 생성되어 있어야 함) / 방 생성과 한 번에 연계
-
+    // Description : 방 나가기 / 마지막 유저가 방 나갈 시 방도 함께 삭제
+    @DeleteMapping("/{user-id}/{room-id}")
+    public ResponseEntity<?> outRoom(@PathVariable(value = "user-id") Long userId, @PathVariable(value = "room-id") Long roomId) {
+        return userService.outRoom(userId, roomId);
+    }
 
 }

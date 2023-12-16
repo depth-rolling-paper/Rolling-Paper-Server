@@ -33,9 +33,9 @@ public class RoomController {
             @ApiResponse(responseCode = "200", description = "방 생성 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = CreateRoomRes.class))}),
             @ApiResponse(responseCode = "400", description = "방 생성 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = FindWaitingRoomRes.class))}),
     })
-    @PostMapping
-    public ResponseEntity<?> createRoom(@RequestBody CreateRoomReq createRoomReq) {
-        return roomService.createRoom(createRoomReq);
+    @PostMapping("/{waiting-room-url}")
+    public ResponseEntity<?> createRoom(@PathVariable(value = "waiting-room-url") String url) {
+        return roomService.createRoom(url);
 
     }
 

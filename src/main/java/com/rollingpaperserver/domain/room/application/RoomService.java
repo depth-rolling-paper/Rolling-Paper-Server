@@ -34,10 +34,10 @@ public class RoomService {
 
     // Description : 방 생성 + 유저 이동 포함
     @Transactional
-    public ResponseEntity<?> createRoom(CreateRoomReq createRoomReq) {
+    public ResponseEntity<?> createRoom(String url) {
 
 //        Optional<WaitingRoom> waitingRoomByWaitingRoomName = waitingRoomRepository.findByWaitingRoomName(createRoomReq.getRoomName());
-        Optional<WaitingRoom> waitingRoomByWaitingRoomUrl = waitingRoomRepository.findByUrl(createRoomReq.getWaitingRoomUrl());
+        Optional<WaitingRoom> waitingRoomByWaitingRoomUrl = waitingRoomRepository.findByUrl(url);
         if (!waitingRoomByWaitingRoomUrl.isPresent()) {
             FindWaitingRoomRes findWaitingRoomRes = FindWaitingRoomRes.builder()
                     .canMake(true)
@@ -50,7 +50,8 @@ public class RoomService {
         WaitingRoom waitingRoom = waitingRoomByWaitingRoomUrl.get();
 
         Room room = Room.builder()
-                .roomName(createRoomReq.getRoomName())
+//                .roomName(createRoomReq.getRoomName())
+                .roomName(waitingRoom.getWaitingRoomName())
                 .url(waitingRoom.getUrl())
                 .build();
 

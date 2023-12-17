@@ -9,10 +9,7 @@ import com.rollingpaperserver.domain.user.domain.User;
 import com.rollingpaperserver.domain.user.domain.repository.UserRepository;
 import com.rollingpaperserver.domain.user.dto.UserDTO;
 import com.rollingpaperserver.domain.user.dto.request.CreateUserReq;
-import com.rollingpaperserver.domain.user.dto.response.CreateUserRes;
-import com.rollingpaperserver.domain.user.dto.response.ExclusionMeRes;
-import com.rollingpaperserver.domain.user.dto.response.FindUserRes;
-import com.rollingpaperserver.domain.user.dto.response.OutRoomRes;
+import com.rollingpaperserver.domain.user.dto.response.*;
 import com.rollingpaperserver.domain.waitingRoom.domain.WaitingRoom;
 import com.rollingpaperserver.domain.waitingRoom.domain.repository.WaitingRoomRepository;
 import com.rollingpaperserver.domain.waitingRoom.dto.response.FindWaitingRoomRes;
@@ -163,9 +160,10 @@ public class UserService {
             return ResponseEntity.badRequest().body(findUserRes);
         }
 
-        Optional<User> findUserWithRoomAndWaitingRoom = userRepository.findUserWithRoomAndWaitingRoom(userId);
-//        Optional<User> findUserById = userRepository.findById(userId);
-        if (!findUserWithRoomAndWaitingRoom.isPresent()) {
+        Room room = roomById.get();
+
+        Optional<User> userById = userRepository.findById(userId);
+        if (userById.isEmpty()) {
             FindUserRes findUserRes = FindUserRes.builder()
                     .message("유저가 존재하지 않습니다.")
                     .build();
@@ -173,18 +171,22 @@ public class UserService {
             return ResponseEntity.badRequest().body(findUserRes);
         }
 
-        User user = findUserWithRoomAndWaitingRoom.get();
+        User user = userById.get();
 
-        Room room = user.getRoom();
-
-        List<User> users = room.getUsers();
-        List<User> exclusiveMe = new ArrayList<>();
+        List<User> users = userRepository.findAllByRoom(room);
+        List<UserRes> exclusiveMe = new ArrayList<>();
 
         for (User userInRoom : users) {
             if (userInRoom.getId() == userId)
                 continue;
 
-            exclusiveMe.add(userInRoom);
+            UserRes userRes = UserRes.builder()
+                    .id(userInRoom.getId())
+                    .userName(userInRoom.getUserName())
+                    .userType(userInRoom.getUserType())
+                    .build();
+
+            exclusiveMe.add(userRes);
         }
 
         ExclusionMeRes exclusionMeRes = ExclusionMeRes.builder()
@@ -193,7 +195,6 @@ public class UserService {
                 .build();
 
         return ResponseEntity.ok(exclusionMeRes);
-
     }
 
     // Description : 방 나가기 / 마지막 유저가 방 나갈 시 방도 함께 삭제

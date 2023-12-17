@@ -24,7 +24,6 @@ public class Room {
     private String url;
 
     @OneToMany(mappedBy = "room")
-    @JsonManagedReference
     private List<User> users = new ArrayList<>();
 
     @Builder

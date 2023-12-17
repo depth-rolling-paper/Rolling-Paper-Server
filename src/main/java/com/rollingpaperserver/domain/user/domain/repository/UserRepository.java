@@ -1,5 +1,6 @@
 package com.rollingpaperserver.domain.user.domain.repository;
 
+import com.rollingpaperserver.domain.room.domain.Room;
 import com.rollingpaperserver.domain.user.domain.User;
 import com.rollingpaperserver.domain.user.dto.UserDTO;
 import com.rollingpaperserver.domain.waitingRoom.domain.WaitingRoom;
@@ -16,6 +17,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // DTO와 함께 사용
     List<User> findAllByWaitingRoom(WaitingRoom waitingRoom);
+
+    List<User> findAllByRoom(Room room);
 
     @Query("SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.room LEFT JOIN FETCH u.waitingRoom")
     List<User> findAllWithRoomAndWaitingRoom();

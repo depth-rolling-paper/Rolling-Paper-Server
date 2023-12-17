@@ -29,7 +29,6 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
-    @JsonBackReference
     private Room room;
 
     @ManyToOne(fetch = FetchType.LAZY)

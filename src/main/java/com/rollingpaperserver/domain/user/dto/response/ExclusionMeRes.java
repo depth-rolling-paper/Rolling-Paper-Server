@@ -17,12 +17,12 @@ import java.util.List;
 @Data
 public class ExclusionMeRes {
 
-    private List<User> users = new ArrayList<>();
+    private List<UserRes> users = new ArrayList<>();
 
     private String message;
 
     @Builder
-    public ExclusionMeRes(List<User> users, String message) {
+    public ExclusionMeRes(List<UserRes> users, String message) {
         this.users = users;
         this.message = message;
     }

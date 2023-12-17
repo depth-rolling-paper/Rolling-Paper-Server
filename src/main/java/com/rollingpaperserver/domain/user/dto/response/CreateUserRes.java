@@ -14,11 +14,17 @@ public class CreateUserRes {
 
     private Long id;
 
+    private int limitUserCount;
+
+    private int currentUserCount;
+
     private String message;
 
     @Builder
-    public CreateUserRes(Long id, String message) {
+    public CreateUserRes(Long id, int limitUserCount, int currentUserCount, String message) {
         this.id = id;
+        this.limitUserCount = limitUserCount;
+        this.currentUserCount = currentUserCount;
         this.message = message;
     }
 }

@@ -141,6 +141,8 @@ public class UserService {
 
         CreateUserRes createUserRes = CreateUserRes.builder()
                 .id(user.getId())
+                .limitUserCount(waitingRoom.getLimit_user_num())
+                .currentUserCount(waitingRoom.getCurrent_user_num())
                 .message("유저가 생성되었습니다. (생성된 유저 ID)")
                 .build();
 

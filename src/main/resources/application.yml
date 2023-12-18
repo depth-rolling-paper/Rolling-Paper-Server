@@ -2,3 +2,9 @@ spring:
   profiles:
     # 로컬 : "h2"  ||  RDS : "rds"로 사용
     active: ["rds", "swagger"]
+
+server:
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-type: PKCS12
+    key-store-password: 

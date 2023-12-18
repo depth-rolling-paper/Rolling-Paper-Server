@@ -40,6 +40,7 @@ public class RoomController {
     }
 
     // Description : 방 삭제
+    // Description : 안써 !!
     @Operation(summary = "롤링페이퍼 작성 방 삭제", description = "롤링페이퍼 작성 방을 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "방 삭제 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = FindRoomRes.class))}),

@@ -149,9 +149,10 @@ public class UserService {
 
     // Description : 해당 '방' 내의 본인 제외 유저 목록 조회
     // TODO : OK
-    public ResponseEntity<?> findUsersExclusionMe(Long userId, Long roomId) {
+    public ResponseEntity<?> findUsersExclusionMe(Long userId,  String roomUrl) {
 
-        Optional<Room> roomById = roomRepository.findById(roomId);
+//        Optional<Room> roomById = roomRepository.findById(roomId);
+        Optional<Room> roomById = roomRepository.findByUrl(roomUrl);
         if (roomById.isEmpty()) {
             FindUserRes findUserRes = FindUserRes.builder()
                     .message("방이 존재하지 않습니다.")
@@ -199,10 +200,11 @@ public class UserService {
 
     // Description : 방 나가기 / 마지막 유저가 방 나갈 시 방도 함께 삭제
     @Transactional
-    public ResponseEntity<?> outRoom(Long userId, Long roomId) {
+    public ResponseEntity<?> outRoom(Long userId, String roomUrl) {
 
         // 방 존재 확인
-        Optional<Room> byRoomId = roomRepository.findById(roomId);
+//        Optional<Room> byRoomId = roomRepository.findById(roomId);
+        Optional<Room> byRoomId = roomRepository.findByUrl(roomUrl);
 
         if (byRoomId.isEmpty()) {
             FindRoomRes roomRes = FindRoomRes.builder()

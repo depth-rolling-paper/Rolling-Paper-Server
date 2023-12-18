@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface RoomRepository extends JpaRepository<Room, Long> {
 
     Optional<Room> findByRoomName(String roomName);
+
+    Optional<Room> findByUrl(String url);
 }

@@ -60,15 +60,15 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "본인 제외 현재 방 내 유저 목록 조회 성공", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = ExclusionMeRes.class))}),
             @ApiResponse(responseCode = "400", description = "본인 제외 현재 방 내 유저 목록 조회 실패", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = FindUserRes.class))}),
     })
-    @GetMapping("/exclusion/{user-id}/{room-id}")
-    public ResponseEntity<?> findUsersExclusionMe(@PathVariable(value = "user-id") Long userId, @PathVariable(value = "room-id") Long roomId ) {
-        return userService.findUsersExclusionMe(userId, roomId);
+    @GetMapping("/exclusion/{user-id}/{room-url}")
+    public ResponseEntity<?> findUsersExclusionMe(@PathVariable(value = "user-id") Long userId, @PathVariable(value = "room-url") String roomUrl) {
+        return userService.findUsersExclusionMe(userId, roomUrl);
     }
 
     // Description : 방 나가기 / 마지막 유저가 방 나갈 시 방도 함께 삭제
-    @DeleteMapping("/{user-id}/{room-id}")
-    public ResponseEntity<?> outRoom(@PathVariable(value = "user-id") Long userId, @PathVariable(value = "room-id") Long roomId) {
-        return userService.outRoom(userId, roomId);
+    @DeleteMapping("/{user-id}/{room-url}")
+    public ResponseEntity<?> outRoom(@PathVariable(value = "user-id") Long userId, @PathVariable(value = "room-url") String roomUrl) {
+        return userService.outRoom(userId, roomUrl);
     }
 
     // Description : 유저 삭제 - 이미지 저장까지 한 진짜 마지막

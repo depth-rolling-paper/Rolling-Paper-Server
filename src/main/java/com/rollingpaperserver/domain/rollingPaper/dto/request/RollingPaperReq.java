@@ -8,6 +8,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Data
 public class RollingPaperReq {
@@ -53,4 +56,7 @@ public class RollingPaperReq {
 
     @Nullable
     private Double sizeY;
+
+    private List<RollingPaperReq> rollingPaperList = new ArrayList<>();
+
 }

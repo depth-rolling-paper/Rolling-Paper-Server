@@ -73,6 +73,7 @@ public class RoomService {
         // Description : 대기 방 삭제
         waitingRoomRepository.delete(waitingRoom);
 
+        // Description : 소켓으로 url 전달
         webSocketEventListener.sendUrl(url);
 
         CreateRoomRes createRoomRes = CreateRoomRes.builder()

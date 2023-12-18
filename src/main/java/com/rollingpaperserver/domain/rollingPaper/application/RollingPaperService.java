@@ -88,43 +88,91 @@ public class RollingPaperService {
 
         User user = userWithRoomAndWaitingRoom.get();
 
-        RollingPaper rollingPaper =  null;
+//        RollingPaper rollingPaper =  null;
+        List<Long> ids = new ArrayList<>();
 
-        // Description : RollingPaperType == ROLLING_PAPER
-        if (rollingPaperReq.getRollingPaperType() == RollingPaperType.ROLLING_PAPER) {
-            rollingPaper = RollingPaper.builder()
-                    .rollingPaperType(rollingPaperReq.getRollingPaperType())
-                    .location_x(rollingPaperReq.getLocation_x())
-                    .location_y(rollingPaperReq.getLocation_y())
-                    .rotation(rollingPaperReq.getRotation())
-                    .width(rollingPaperReq.getWidth())
-                    .height(rollingPaperReq.getHeight())
-                    .scaleX(rollingPaperReq.getScaleX())
-                    .scaleY(rollingPaperReq.getScaleY())
-                    .text(rollingPaperReq.getText())
-                    .fontFamily(rollingPaperReq.getFontFamily())
-                    .user(user)
-                    .build();
+        List<RollingPaperReq> rollingPaperList = rollingPaperReq.getRollingPaperList();
+        for (RollingPaperReq paperReq : rollingPaperList) {
 
-        } else { // Description : RollingPaperType == IMAGE
-            rollingPaper = RollingPaper.builder()
-                    .rollingPaperType(rollingPaperReq.getRollingPaperType())
-                    .imageName(rollingPaperReq.getImageName())
-                    .sizeX(rollingPaperReq.getSizeX())
-                    .sizeY(rollingPaperReq.getSizeY())
-                    .user(user)
-                    .build();
+            // Description : RollingPaperType == ROLLING_PAPER
+            if (paperReq.getRollingPaperType() == RollingPaperType.ROLLING_PAPER) {
+                RollingPaper rollingPaper = RollingPaper.builder()
+                        .rollingPaperType(paperReq.getRollingPaperType())
+                        .location_x(paperReq.getLocation_x())
+                        .location_y(paperReq.getLocation_y())
+                        .rotation(paperReq.getRotation())
+                        .width(paperReq.getWidth())
+                        .height(paperReq.getHeight())
+                        .scaleX(paperReq.getScaleX())
+                        .scaleY(paperReq.getScaleY())
+                        .text(paperReq.getText())
+                        .fontFamily(paperReq.getFontFamily())
+                        .user(user)
+                        .build();
+
+                rollingPaperRepository.save(rollingPaper);
+                ids.add(rollingPaper.getId());
+
+            } else { // Description : RollingPaperType == IMAGE
+
+                RollingPaper rollingPaper = RollingPaper.builder()
+                        .rollingPaperType(paperReq.getRollingPaperType())
+                        .imageName(paperReq.getImageName())
+                        .sizeX(paperReq.getSizeX())
+                        .sizeY(paperReq.getSizeY())
+                        .user(user)
+                        .build();
+
+                rollingPaperRepository.save(rollingPaper);
+                ids.add(rollingPaper.getId());
+
+            }
 
         }
 
-        rollingPaperRepository.save(rollingPaper);
-
         RollingPaperRes rollingPaperRes = RollingPaperRes.builder()
-                .rollingPaperId(rollingPaper.getId())
+                .rollingPaperIds(ids)
                 .message("롤링페이퍼가 작성되었습니다.")
                 .build();
 
         return ResponseEntity.ok(rollingPaperRes);
+
+
+//        // Description : RollingPaperType == ROLLING_PAPER
+//        if (rollingPaperReq.getRollingPaperType() == RollingPaperType.ROLLING_PAPER) {
+//            rollingPaper = RollingPaper.builder()
+//                    .rollingPaperType(rollingPaperReq.getRollingPaperType())
+//                    .location_x(rollingPaperReq.getLocation_x())
+//                    .location_y(rollingPaperReq.getLocation_y())
+//                    .rotation(rollingPaperReq.getRotation())
+//                    .width(rollingPaperReq.getWidth())
+//                    .height(rollingPaperReq.getHeight())
+//                    .scaleX(rollingPaperReq.getScaleX())
+//                    .scaleY(rollingPaperReq.getScaleY())
+//                    .text(rollingPaperReq.getText())
+//                    .fontFamily(rollingPaperReq.getFontFamily())
+//                    .user(user)
+//                    .build();
+//
+//        } else { // Description : RollingPaperType == IMAGE
+//            rollingPaper = RollingPaper.builder()
+//                    .rollingPaperType(rollingPaperReq.getRollingPaperType())
+//                    .imageName(rollingPaperReq.getImageName())
+//                    .sizeX(rollingPaperReq.getSizeX())
+//                    .sizeY(rollingPaperReq.getSizeY())
+//                    .user(user)
+//                    .build();
+//
+//        }
+
+//        rollingPaperRepository.save(rollingPaper);
+
+//        RollingPaperRes rollingPaperRes = RollingPaperRes.builder()
+//                .rollingPaperId(rollingPaper.getId())
+//                .message("롤링페이퍼가 작성되었습니다.")
+//                .build();
+//
+//        return ResponseEntity.ok(rollingPaperRes);
 
     }
 

@@ -30,4 +30,8 @@ public class WebSocketEventListener {
         // Description : 유저 수 업데이트, 업데이트 된 유저 수 보내기
         messagingTemplate.convertAndSend("/topic/" + waitingRoomUrl, userCount);
     }
+
+    public void sendUrl(String roomUrl) {
+        messagingTemplate.convertAndSend("/topic/" + roomUrl, roomUrl);
+    }
 }

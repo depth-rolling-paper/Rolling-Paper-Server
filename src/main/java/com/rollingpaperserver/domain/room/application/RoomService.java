@@ -14,6 +14,7 @@ import com.rollingpaperserver.domain.user.domain.repository.UserRepository;
 import com.rollingpaperserver.domain.waitingRoom.domain.WaitingRoom;
 import com.rollingpaperserver.domain.waitingRoom.domain.repository.WaitingRoomRepository;
 import com.rollingpaperserver.domain.waitingRoom.dto.response.FindWaitingRoomRes;
+import com.rollingpaperserver.global.config.WebSocketEventListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class RoomService {
     private final WaitingRoomRepository waitingRoomRepository;
     private final UserRepository userRepository;
     private final RollingPaperRepository rollingPaperRepository;
+
+    private final WebSocketEventListener webSocketEventListener;
 
     // Description : 방 생성 + 유저 이동 포함
     @Transactional
@@ -69,6 +72,8 @@ public class RoomService {
 
         // Description : 대기 방 삭제
         waitingRoomRepository.delete(waitingRoom);
+
+        webSocketEventListener.sendUrl(url);
 
         CreateRoomRes createRoomRes = CreateRoomRes.builder()
                 .id(room.getId())

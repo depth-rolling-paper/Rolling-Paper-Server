@@ -24,6 +24,8 @@ public class WaitingRoomService {
 
     private final WaitingRoomRepository waitingRoomRepository;
 
+    private final WebSocketEventListener webSocketEventListener;
+
     // Description : 대기 방 생성
     // TODO : OK
     @Transactional
@@ -42,6 +44,9 @@ public class WaitingRoomService {
 
         // 대기 방 생성 후 저장
         waitingRoomRepository.save(newWaitingRoom);
+
+        // Description : 시간 지나면 시작 가능하도록 설정..
+        webSocketEventListener.sendCanStart(createWaitingRoomReq.getStart_time_minute(), url);
 
         CreateWaitingRoomRes createWaitingRoomRes = CreateWaitingRoomRes.builder()
                 .id(newWaitingRoom.getId())
@@ -77,7 +82,6 @@ public class WaitingRoomService {
 
     // Description : 현재 대기 인원 조회 - 참여할 수 있는지 확인해봐야 하므로
     public ResponseEntity<?> checkCanJoinWaitingRoom(String url) {
-//        Optional<WaitingRoom> findByIdWaitingRoom = waitingRoomRepository.findById(waitingRoomId);
         Optional<WaitingRoom> findByIdWaitingRoom = waitingRoomRepository.findByUrl(url);
 
         // 해당 대기 방이 없는 경우
@@ -96,7 +100,7 @@ public class WaitingRoomService {
         if (waitingRoom.getCurrent_user_num() == waitingRoom.getLimit_user_num()) {
             JoinWaitingRoomRes joinWaitingRoomRes = JoinWaitingRoomRes.builder()
                     .canJoin(false)
-                    .message("대기 방이 가득 찼습니다.")
+                    .message("이 방은 더 이상 입장이 불가능해요, 인원 수를 확인해 주세요.")
                     .build();
 
             return ResponseEntity.badRequest().body(joinWaitingRoomRes);

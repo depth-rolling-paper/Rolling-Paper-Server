@@ -51,6 +51,17 @@ public class UserService {
         }
 
         WaitingRoom waitingRoom = waitingRoomByUrl.get();
+
+        // 현재 인원 == 최대 인원인 경우
+        if (waitingRoom.getCurrent_user_num() == waitingRoom.getLimit_user_num()) {
+            JoinWaitingRoomRes joinWaitingRoomRes = JoinWaitingRoomRes.builder()
+                    .canJoin(false)
+                    .message("이 방은 더 이상 입장이 불가능해요, 인원 수를 확인해 주세요.")
+                    .build();
+
+            return ResponseEntity.badRequest().body(joinWaitingRoomRes);
+        }
+
         List<User> allByWaitingRoom = userRepository.findAllByWaitingRoom(waitingRoom);
         List<UserDTO> userDTOS = new ArrayList<>();
 
@@ -66,7 +77,7 @@ public class UserService {
             if (userDTO.getUserName().equals(userName)) {
                 FindUserRes findUserRes = FindUserRes.builder()
                         .canUse(false)
-                        .message("이미 존재하는 닉네임입니다.")
+                        .message("이미 사용 중인 이름이에요.")
                         .build();
 
                 return ResponseEntity.badRequest().body(findUserRes);

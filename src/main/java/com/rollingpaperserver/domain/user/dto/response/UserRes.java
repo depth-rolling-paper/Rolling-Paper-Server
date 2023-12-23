@@ -16,10 +16,13 @@ public class UserRes {
 
     private UserType userType;
 
+    private Integer sequence;
+
     @Builder
-    public UserRes(Long id, String userName, UserType userType) {
+    public UserRes(Long id, String userName, UserType userType, Integer sequence) {
         this.id = id;
         this.userName = userName;
         this.userType = userType;
+        this.sequence = sequence;
     }
 }

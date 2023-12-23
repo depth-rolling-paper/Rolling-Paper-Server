@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -185,21 +186,30 @@ public class UserService {
 
         User user = userById.get();
 
-        List<User> users = userRepository.findAllByRoom(room);
+        List<User> allUsersInRoom = userRepository.findAllByRoom(room);
         List<UserRes> exclusiveMe = new ArrayList<>();
 
-        for (User userInRoom : users) {
+        for (User userInRoom : allUsersInRoom) {
             if (userInRoom.getId() == userId)
                 continue;
+
+            // userId를 기준으로 뒤쪽으로 회전시키기 위한 offset 계산
+            int offset = (int) (userInRoom.getId() - userId);
+
+            // 겹치지 않게 sequence를 조합
+            int newSequence = (offset > 0) ? offset : allUsersInRoom.size() + offset;
 
             UserRes userRes = UserRes.builder()
                     .id(userInRoom.getId())
                     .userName(userInRoom.getUserName())
                     .userType(userInRoom.getUserType())
+                    .sequence(newSequence)
                     .build();
 
             exclusiveMe.add(userRes);
         }
+
+        exclusiveMe.sort(Comparator.comparing(UserRes::getSequence));
 
         ExclusionMeRes exclusionMeRes = ExclusionMeRes.builder()
                 .users(exclusiveMe)

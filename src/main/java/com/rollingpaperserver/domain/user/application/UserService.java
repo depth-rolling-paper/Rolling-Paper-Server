@@ -212,6 +212,7 @@ public class UserService {
         exclusiveMe.sort(Comparator.comparing(UserRes::getSequence));
 
         ExclusionMeRes exclusionMeRes = ExclusionMeRes.builder()
+                .roomName(room.getRoomName())
                 .users(exclusiveMe)
                 .message("본인 제외 현재 방 내 유저 목록")
                 .build();

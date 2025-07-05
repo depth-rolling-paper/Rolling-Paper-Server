@@ -37,5 +37,6 @@ out/
 .vscode/
 
 ### Database ###
-/src/main/resources/application-rds.yml
-/src/main/resources/application-h2.yml
+/src/main/resources/application-db.yml
+/src/main/resources/application-infra.yml
+/src/main/resources/architecture_docs
